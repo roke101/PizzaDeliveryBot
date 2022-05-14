@@ -17,6 +17,7 @@ templatePath = scriptPath + 'templates\\'
 
 
 @bot.command(name='city17')
+@commands.cooldown(1, 1, type=commands.BucketType.user)
 async def City_Seventeen(ctx):
     
     lastDiscordImage = await Get_Last_Picture(ctx)
