@@ -12,8 +12,8 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 bot = commands.Bot(command_prefix='<')
 
 #slashes will need to change based on os used
-scriptPath = os.path.dirname(os.path.realpath(__file__)) + '\\'
-templatePath = scriptPath + 'templates\\'
+scriptPath = os.path.dirname(os.path.realpath(__file__))
+templatePath = os.path.join(scriptPath, 'templates')
 
 
 @bot.command(name='city17')
@@ -21,11 +21,12 @@ templatePath = scriptPath + 'templates\\'
 async def City_Seventeen(ctx):
     
     lastDiscordImage = await Get_Last_Picture(ctx)
-    uploadedImage = Image.open(scriptPath + lastDiscordImage).convert("RGBA")
+    print(scriptPath)
+    uploadedImage = Image.open(os.path.join(scriptPath, lastDiscordImage)).convert("RGBA")
     
-    city17Base = Image.open(templatePath + 'city17Background.png')
-    imageMask = Image.open(templatePath + 'City17Mask.png').convert("L").resize((154, 292))
-    wiresOverlap = Image.open(templatePath + 'wires.png').convert("RGBA")
+    city17Base = Image.open(os.path.join(templatePath, 'city17Background.png'))
+    imageMask = Image.open(os.path.join(templatePath, 'City17Mask.png')).convert("L").resize((154, 292))
+    wiresOverlap = Image.open(os.path.join(templatePath, 'wires.png')).convert("RGBA")
 
     #resize image
     uploadedImage = uploadedImage.resize((154, 292))
@@ -41,11 +42,11 @@ async def City_Seventeen(ctx):
 
     city17Base.paste(wiresOverlap, (0, 0), wiresOverlap)
 
-    city17Base.save(scriptPath + 'city17.png')
+    city17Base.save(os.path.join(scriptPath, 'city17.png'))
     
-    await ctx.send(file=discord.File(scriptPath + 'city17.png'), content='Welcome! Welcome to City 17!')
+    await ctx.send(file=discord.File(os.path.join(scriptPath, 'city17.png')), content='Welcome! Welcome to City 17!') 
     
-    os.remove(scriptPath +  lastDiscordImage)
+    os.remove(os.path.join(scriptPath, lastDiscordImage)) 
     
     #await ctx.send(lastDiscordImage)
 
@@ -58,7 +59,7 @@ async def Get_Last_Picture(ctx):
             if 'image' in lastDiscordMedia.content_type:
                 break
                 
-    print(await lastDiscordMedia.save( scriptPath + lastDiscordMedia.filename))
+    print(await lastDiscordMedia.save( os.path.join(scriptPath, lastDiscordMedia.filename)))
     return lastDiscordMedia.filename
 
     
