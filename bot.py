@@ -82,6 +82,26 @@ async def Grind(ctx):
     
     os.remove(os.path.join(scriptPath, lastDiscordImage)) 
     
+@bot.command(name='walmart')
+@commands.cooldown(1, 1, type=commands.BucketType.user)
+async def Walmart(ctx):
+    
+    lastDiscordImage = await Get_Last_Picture(ctx)
+    uploadedImage = Image.open(os.path.join(scriptPath, lastDiscordImage)).convert("RGBA")
+    
+    walmartBase = Image.open(os.path.join(templatePath, 'walmartTemplate.png'))
+
+    #resize image
+    uploadedImage = uploadedImage.resize((190, 224))
+
+    #overlay onto walmart template
+    walmartBase.paste(uploadedImage, (428, 94), uploadedImage)
+
+    walmartBase.save(os.path.join(scriptPath, 'walmart.png'))
+    
+    await ctx.send(file=discord.File(os.path.join(scriptPath, 'walmart.png'))) 
+    
+    os.remove(os.path.join(scriptPath, lastDiscordImage)) 
 
 # Helper function that saves the last image posted in channel
 # and returns that images file name    
