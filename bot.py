@@ -64,6 +64,7 @@ async def Grind(ctx):
     height = uploadedImage.size[1]
     widthRescaled = int(uploadedImage.size[0] * 1.1)
     heightRescaled = int(uploadedImage.size[1] * 1.298)
+    #put the image in the center of the canvas with some displacement
     widthRepositioned = (widthRescaled - width)//2 + 2
     heightRepositioned = (heightRescaled - height)//2 - 23
     
@@ -101,7 +102,33 @@ async def Walmart(ctx):
     
     await ctx.send(file=discord.File(os.path.join(scriptPath, 'walmart.png'))) 
     
+    os.remove(os.path.join(scriptPath, lastDiscordImage))
+    
+@bot.command(name='bobross')
+@commands.cooldown(1, 1, type=commands.BucketType.user)
+async def Bobross(ctx):
+    
+    lastDiscordImage = await Get_Last_Picture(ctx)
+    uploadedImage = Image.open(os.path.join(scriptPath, lastDiscordImage)).convert("RGBA")
+    
+    bobRossBase = Image.open(os.path.join(templatePath, 'bobRossTemplate.png'))
+    bobRossCopy = bobRossBase.copy()
+    #resize image
+    uploadedImage = uploadedImage.resize((453, 340))
+
+
+    #overlay onto bobRoss template
+    bobRossBase.paste(uploadedImage, (19, 71), uploadedImage)
+    #overlay again since there is no more scaling to be done
+    bobRossBase.paste(bobRossCopy, (0, 0), bobRossCopy)
+
+    bobRossBase.save(os.path.join(scriptPath, 'bobross.png'))
+    
+    await ctx.send(file=discord.File(os.path.join(scriptPath, 'bobross.png'))) 
+    
     os.remove(os.path.join(scriptPath, lastDiscordImage)) 
+
+
 
 # Helper function that saves the last image posted in channel
 # and returns that images file name    
