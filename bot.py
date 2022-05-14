@@ -21,7 +21,6 @@ templatePath = os.path.join(scriptPath, 'templates')
 async def City_Seventeen(ctx):
     
     lastDiscordImage = await Get_Last_Picture(ctx)
-    print(scriptPath)
     uploadedImage = Image.open(os.path.join(scriptPath, lastDiscordImage)).convert("RGBA")
     
     city17Base = Image.open(os.path.join(templatePath, 'city17Background.png'))
@@ -48,7 +47,35 @@ async def City_Seventeen(ctx):
     
     os.remove(os.path.join(scriptPath, lastDiscordImage)) 
     
-    #await ctx.send(lastDiscordImage)
+@bot.command(name='grind')
+@commands.cooldown(1, 1, type=commands.BucketType.user)
+async def Grind(ctx):
+    
+    lastDiscordImage = await Get_Last_Picture(ctx)
+    uploadedImage = Image.open(os.path.join(scriptPath, lastDiscordImage)).convert("RGBA")
+
+    grindBase = Image.open(os.path.join(templatePath, 'grindTemplate.png'))
+
+    #resize image
+    uploadedImage = uploadedImage.resize(grindBase.size)
+    w = uploadedImage.size[0]
+    h = uploadedImage.size[1]
+    wN = int(uploadedImage.size[0] * 1.1)
+    hN = int(uploadedImage.size[1] * 1.298)
+
+    new_im = Image.new("RGBA", (wN, hN))
+    new_im.paste(uploadedImage, (2 + (wN-w)//2, (hN-h)//2 - 23 ))
+    uploadedImage = new_im
+    uploadedImage = uploadedImage.resize(grindBase.size)
+
+    uploadedImage.paste(grindBase, (0, 0), grindBase)
+
+    uploadedImage.save(os.path.join(scriptPath, 'grind.png'))
+    
+    await ctx.send(file=discord.File(os.path.join(scriptPath, 'grind.png'))) 
+    
+    os.remove(os.path.join(scriptPath, lastDiscordImage)) 
+    
 
 # Helper function that saves the last image posted in channel
 # and returns that images file name    
