@@ -11,48 +11,54 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 bot = commands.Bot(command_prefix='<')
 
+#slashes will need to change based on os used
+scriptPath = os.path.dirname(os.path.realpath(__file__)) + '\\'
+templatePath = scriptPath + 'templates\\'
+
 
 @bot.command(name='city17')
-async def nine_nine(ctx):
-    async for message in ctx.channel.history(limit=None):
-        if message.attachments:
-            media = message.attachments[0]
-            if 'image' in media.content_type:
-                break
-                
-    #slashes will need to change based on os used            
-    scriptPath = os.path.dirname(os.path.realpath(__file__)) + '\\'
-    templatePath = scriptPath + 'templates\\'
-
+async def City_Seventeen(ctx):
     
-    print(await media.save( scriptPath + media.filename))
+    lastDiscordImage = await Get_Last_Picture(ctx)
+    uploadedImage = Image.open(scriptPath + lastDiscordImage).convert("RGBA")
     
-    UploadedImage = Image.open(scriptPath + media.filename).convert("RGBA")
-    
-    City17Base = Image.open(templatePath + 'city17Background.png')
-    ImageMask = Image.open(templatePath + 'City17Mask.png').convert("L").resize((154, 292))
+    city17Base = Image.open(templatePath + 'city17Background.png')
+    imageMask = Image.open(templatePath + 'City17Mask.png').convert("L").resize((154, 292))
     wiresOverlap = Image.open(templatePath + 'wires.png').convert("RGBA")
 
     #resize image
-    UploadedImage = UploadedImage.resize((154, 292))
+    uploadedImage = uploadedImage.resize((154, 292))
 
     #apply mask to give top of screen curviture
-    UploadedImage.putalpha(ImageMask)
+    uploadedImage.putalpha(imageMask)
 
     #tilt image
-    UploadedImage = UploadedImage.rotate(-10, Image.Resampling.BICUBIC ,expand=True)
+    uploadedImage = uploadedImage.rotate(-10, Image.Resampling.BICUBIC ,expand=True)
 
     #overlay onto pre-existing city17
-    City17Base.paste(UploadedImage, (134, 363), UploadedImage)
+    city17Base.paste(uploadedImage, (134, 363), uploadedImage)
 
-    City17Base.paste(wiresOverlap, (0, 0), wiresOverlap)
+    city17Base.paste(wiresOverlap, (0, 0), wiresOverlap)
 
-    City17Base.save(scriptPath + 'city17.png')
+    city17Base.save(scriptPath + 'city17.png')
     
     await ctx.send(file=discord.File(scriptPath + 'city17.png'), content='Welcome! Welcome to City 17!')
     
-    os.remove(scriptPath +  media.filename)
+    os.remove(scriptPath +  lastDiscordImage)
     
-    #await ctx.send(media)
+    #await ctx.send(lastDiscordImage)
+
+# Helper function that saves the last image posted in channel
+# and returns that images file name    
+async def Get_Last_Picture(ctx):
+    async for message in ctx.channel.history(limit=None):
+        if message.attachments:
+            lastDiscordMedia = message.attachments[0]
+            if 'image' in lastDiscordMedia.content_type:
+                break
+                
+    print(await lastDiscordMedia.save( scriptPath + lastDiscordMedia.filename))
+    return lastDiscordMedia.filename
+
     
 bot.run(TOKEN)
