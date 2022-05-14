@@ -58,16 +58,22 @@ async def Grind(ctx):
 
     #resize image
     uploadedImage = uploadedImage.resize(grindBase.size)
-    w = uploadedImage.size[0]
-    h = uploadedImage.size[1]
-    wN = int(uploadedImage.size[0] * 1.1)
-    hN = int(uploadedImage.size[1] * 1.298)
-
-    new_im = Image.new("RGBA", (wN, hN))
-    new_im.paste(uploadedImage, (2 + (wN-w)//2, (hN-h)//2 - 23 ))
-    uploadedImage = new_im
+    
+    #calculate and apply new scaling and position to the base image
+    width = uploadedImage.size[0]
+    height = uploadedImage.size[1]
+    widthRescaled = int(uploadedImage.size[0] * 1.1)
+    heightRescaled = int(uploadedImage.size[1] * 1.298)
+    widthRepositioned = (widthRescaled - width)//2 + 2
+    heightRepositioned = (heightRescaled - height)//2 - 23
+    
+    #scale and paste uploaded image onto a black background
+    canvas = Image.new("RGBA", (widthRescaled, heightRescaled))
+    canvas.paste(uploadedImage, (widthRepositioned, heightRepositioned))
+    uploadedImage = canvas
     uploadedImage = uploadedImage.resize(grindBase.size)
 
+    #paste the grind template over the new scaled and positioned image
     uploadedImage.paste(grindBase, (0, 0), grindBase)
 
     uploadedImage.save(os.path.join(scriptPath, 'grind.png'))
