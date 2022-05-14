@@ -23,9 +23,9 @@ async def City_Seventeen(ctx):
     lastDiscordImage = await Get_Last_Picture(ctx)
     uploadedImage = Image.open(os.path.join(scriptPath, lastDiscordImage)).convert("RGBA")
     
-    city17Base = Image.open(os.path.join(templatePath, 'city17Background.png'))
+    city17Base = Image.open(os.path.join(templatePath, 'city17Template.png'))
     imageMask = Image.open(os.path.join(templatePath, 'City17Mask.png')).convert("L").resize((154, 292))
-    wiresOverlap = Image.open(os.path.join(templatePath, 'wires.png')).convert("RGBA")
+    wiresOverlap = Image.open(os.path.join(templatePath, 'wiresTemplate.png')).convert("RGBA")
 
     #resize image
     uploadedImage = uploadedImage.resize((154, 292))
