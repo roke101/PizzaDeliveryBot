@@ -1,5 +1,5 @@
 # PizzaDeliveryBot
-Junkyard bot
+Junkyard image editing bot
 
 dependencies  
   &emsp;[discord py](https://discordpy.readthedocs.io/en/stable/intro.html)  
