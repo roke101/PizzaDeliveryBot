@@ -11,9 +11,20 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 bot = commands.Bot(command_prefix='<')
 
-#slashes will need to change based on os used
 scriptPath = os.path.dirname(os.path.realpath(__file__))
 templatePath = os.path.join(scriptPath, 'templates')
+
+# the section bellow handles storing pictures on the server
+# this  feautre is disabled by default and is set in .env
+# SAVE_PICTURE_PERMENANTLY needs to be set to true and
+# SAVE_PICTURE_ID_WHITELIST needs to contain the server id the bot is saving pictures from
+savePicturePermenantly = os.getenv('SAVE_PICTURE_PERMENANTLY', default=False)
+savePictureIdWhitelist = os.getenv('SAVE_PICTURE_ID_WHITELIST', default="").split(",")
+
+#save picture path is optional, by default it saves pictures in the script directory
+savePicturePath = os.getenv('SAVE_PICTURE_PATH', default=scriptPath)
+
+
 
 
 @bot.command(name='city17')
@@ -46,6 +57,8 @@ async def City_Seventeen(ctx):
     await ctx.send(file=discord.File(os.path.join(scriptPath, 'city17.png')), content='Welcome! Welcome to City 17!') 
     
     os.remove(os.path.join(scriptPath, lastDiscordImage)) 
+    
+    Save_Generated_Picture(ctx, city17Base)
     
 @bot.command(name='grind')
 @commands.cooldown(1, 1, type=commands.BucketType.user)
@@ -81,7 +94,9 @@ async def Grind(ctx):
     
     await ctx.send(file=discord.File(os.path.join(scriptPath, 'grind.png'))) 
     
-    os.remove(os.path.join(scriptPath, lastDiscordImage)) 
+    os.remove(os.path.join(scriptPath, lastDiscordImage))
+    
+    Save_Generated_Picture(ctx, uploadedImage)
     
 @bot.command(name='walmart')
 @commands.cooldown(1, 1, type=commands.BucketType.user)
@@ -103,6 +118,8 @@ async def Walmart(ctx):
     await ctx.send(file=discord.File(os.path.join(scriptPath, 'walmart.png'))) 
     
     os.remove(os.path.join(scriptPath, lastDiscordImage))
+    
+    Save_Generated_Picture(ctx, walmartBase)
     
 @bot.command(name='bobross')
 @commands.cooldown(1, 1, type=commands.BucketType.user)
@@ -126,8 +143,9 @@ async def Bobross(ctx):
     
     await ctx.send(file=discord.File(os.path.join(scriptPath, 'bobross.png'))) 
     
-    os.remove(os.path.join(scriptPath, lastDiscordImage)) 
-
+    os.remove(os.path.join(scriptPath, lastDiscordImage))
+    
+    Save_Generated_Picture(ctx, bobRossBase)
 
 
 # Helper function that saves the last image posted in channel
@@ -142,5 +160,21 @@ async def Get_Last_Picture(ctx):
     print(await lastDiscordMedia.save( os.path.join(scriptPath, lastDiscordMedia.filename)))
     return lastDiscordMedia.filename
 
+# Helper function that saves the last Generated image permanently
+# to the server if the if condition is true  
+def Save_Generated_Picture(ctx, saveImage):
+    #if save pcitures is set to true and the server sending the message is on the white list
+    if(savePicturePermenantly and str(ctx.message.guild.id) in savePictureIdWhitelist):
+        #get the destination path wed like to write to 
+        #formatted *path*\PizzaDeliveryBotSavedPictures\*serverName*\*commandName*
+        dest = os.path.join(savePicturePath, 'PizzaDeliveryBotSavedPictures', ctx.message.guild.name.replace(' ' ,'_'), ctx.command.name)
+        print(dest)
+        #if the directory doesnt exist, make it
+        if not os.path.exists(dest):
+            os.makedirs(dest)
+        list = os.listdir(dest)
+        numberOfFiles = len(list)
+        #save picture to *path*\PizzaDeliveryBotSavedPictures\*commandName*\*commandNameTotalFilesPlus1.png*
+        saveImage.save(os.path.join(dest, ctx.command.name + str(numberOfFiles + 1) + '.png'))
     
 bot.run(TOKEN)
