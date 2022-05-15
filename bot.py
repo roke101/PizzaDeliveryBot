@@ -168,7 +168,6 @@ def Save_Generated_Picture(ctx, saveImage):
         #get the destination path wed like to write to 
         #formatted *path*\PizzaDeliveryBotSavedPictures\*serverName*\*commandName*
         dest = os.path.join(savePicturePath, 'PizzaDeliveryBotSavedPictures', ctx.message.guild.name.replace(' ' ,'_'), ctx.command.name)
-        print(dest)
         #if the directory doesnt exist, make it
         if not os.path.exists(dest):
             os.makedirs(dest)
