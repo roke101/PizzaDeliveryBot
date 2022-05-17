@@ -146,6 +146,31 @@ async def Bobross(ctx):
     os.remove(os.path.join(scriptPath, lastDiscordImage))
     
     Save_Generated_Picture(ctx, bobRossBase)
+    
+@bot.command(name='dominos')
+@commands.cooldown(1, 1, type=commands.BucketType.user)
+async def Dominos(ctx):
+    
+    lastDiscordImage = await Get_Last_Picture(ctx)
+    uploadedImage = Image.open(os.path.join(scriptPath, lastDiscordImage)).convert("RGBA")
+    
+    dominosBase = Image.open(os.path.join(templatePath, 'dominosTemplate.png')).convert("RGBA")
+    dominosCopy = dominosBase.copy()
+    #resize image
+    uploadedImage = uploadedImage.resize((103, 173))
+    uploadedImage = uploadedImage.rotate(-3.25, Image.Resampling.BICUBIC ,expand=True)
+
+    #overlay onto dominos template
+    dominosBase.paste(uploadedImage, (232, 295), uploadedImage)
+    dominosBase.paste(dominosCopy, (0, 0), dominosCopy)
+
+    dominosBase.save(os.path.join(scriptPath, 'dominos.png'))
+    
+    await ctx.send(file=discord.File(os.path.join(scriptPath, 'dominos.png'))) 
+    
+    os.remove(os.path.join(scriptPath, lastDiscordImage))
+    
+    Save_Generated_Picture(ctx, bobRossBase)
 
 
 # Helper function that saves the last image posted in channel
@@ -177,3 +202,4 @@ def Save_Generated_Picture(ctx, saveImage):
         saveImage.save(os.path.join(dest, ctx.command.name + str(numberOfFiles + 1) + '.png'))
     
 bot.run(TOKEN)
+ 
