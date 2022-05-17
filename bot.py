@@ -170,7 +170,7 @@ async def Dominos(ctx):
     
     os.remove(os.path.join(scriptPath, lastDiscordImage))
     
-    Save_Generated_Picture(ctx, bobRossBase)
+    Save_Generated_Picture(ctx, dominosBase)
 
 
 # Helper function that saves the last image posted in channel
