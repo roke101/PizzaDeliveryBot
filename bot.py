@@ -171,6 +171,32 @@ async def Dominos(ctx):
     os.remove(os.path.join(scriptPath, lastDiscordImage))
     
     Save_Generated_Picture(ctx, dominosBase)
+    
+@bot.command(name='trump')
+@commands.cooldown(1, 1, type=commands.BucketType.user)
+async def Trump(ctx):
+    
+    lastDiscordImage = await Get_Last_Picture(ctx)
+    uploadedImage = Image.open(os.path.join(scriptPath, lastDiscordImage)).convert("RGBA")
+    
+    trumpBase = Image.open(os.path.join(templatePath, 'trumpTemplate.png'))
+    trumpCopy = trumpBase.copy()
+
+    uploadedImage = uploadedImage.resize((335, 300))
+    uploadedImage = uploadedImage.rotate(4, Image.Resampling.BICUBIC ,expand=True)
+    #resize image
+
+    #overlay onto walmart template
+    trumpBase.paste(uploadedImage, (87, 80), uploadedImage)
+    trumpBase.paste(trumpCopy, (0,0), trumpCopy)
+
+    trumpBase.save(os.path.join(scriptPath, 'trump.png'))
+    
+    await ctx.send(file=discord.File(os.path.join(scriptPath, 'trump.png'))) 
+    
+    os.remove(os.path.join(scriptPath, lastDiscordImage))
+    
+    Save_Generated_Picture(ctx, trumpBase)
 
 
 # Helper function that saves the last image posted in channel
