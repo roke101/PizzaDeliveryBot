@@ -18,7 +18,7 @@ templatePath = os.path.join(scriptPath, 'templates')
 # this  feautre is disabled by default and is set in .env
 # SAVE_PICTURE_PERMENANTLY needs to be set to true and
 # SAVE_PICTURE_ID_WHITELIST needs to contain the server id the bot is saving pictures from
-savePicturePermenantly = os.getenv('SAVE_PICTURE_PERMENANTLY', default=False)
+savePicturePermenantly = os.getenv('SAVE_PICTURE_PERMENANTLY', default='False')
 savePictureIdWhitelist = os.getenv('SAVE_PICTURE_ID_WHITELIST', default="").split(",")
 
 #save picture path is optional, by default it saves pictures in the script directory
@@ -215,10 +215,10 @@ async def Get_Last_Picture(ctx):
 # to the server if the if condition is true  
 def Save_Generated_Picture(ctx, saveImage):
     #if save pcitures is set to true and the server sending the message is on the white list
-    if(savePicturePermenantly and str(ctx.message.guild.id) in savePictureIdWhitelist):
+    if(savePicturePermenantly == 'True' and str(ctx.message.guild.id) in savePictureIdWhitelist):
         #get the destination path wed like to write to 
         #formatted *path*\PizzaDeliveryBotSavedPictures\*serverName*\*commandName*
-        dest = os.path.join(savePicturePath, 'PizzaDeliveryBotSavedPictures', ctx.message.guild.name.replace(' ' ,'_'), ctx.command.name)
+        dest = os.path.join(savePicturePath, 'PizzaDeliveryBotSavedPictures', ctx.message.guild.name.replace(' ', '_'), ctx.command.name)
         #if the directory doesnt exist, make it
         if not os.path.exists(dest):
             os.makedirs(dest)
