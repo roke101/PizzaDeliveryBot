@@ -1,0 +1,11 @@
+# .env
+DISCORD_TOKEN=your_bot_token_here
+
+# SET THIS TO TRUE TO ENABLE SAVING PICTURES
+SAVE_PICTURE_PERMENANTLY=False
+#to add to whitelist add it to string sperated with ,
+#white list includes: ex1, ex2
+SAVE_PICTURE_ID_WHITELIST='your_server_id,another_server_id'
+
+#optional
+SAVE_PICTURE_PATH=picture\\directory\\here
