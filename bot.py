@@ -9,7 +9,7 @@ from PIL import Image
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-bot = commands.Bot(command_prefix='<')
+bot = commands.Bot(command_prefix='<', activity=discord.Game(name="Pizza Ya San"))
 
 scriptPath = os.path.dirname(os.path.realpath(__file__))
 templatePath = os.path.join(scriptPath, 'templates')
