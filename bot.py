@@ -217,8 +217,12 @@ async def Greenscreen(ctx, arg):
     if filter.filesize < 8000000:
         filter.download(scriptPath, filename="videoOut.mp4")
     else:
-        await ctx.send(content='The video linked is over 8MB, please use another video.')
-        return
+        filter = yt.streams.filter(file_extension="mp4").get_by_resolution('360p')
+        if filter.filesize < 8000000:
+            filter.download(scriptPath, filename="videoOut.mp4")
+        else:
+            await ctx.send(content='The video linked is over 8MB, please use another video.')
+            return
     
     video = cv2.VideoCapture(os.path.join(scriptPath, "videoOut.mp4"))
     image = cv2.imread(os.path.join(scriptPath, lastDiscordImage))
