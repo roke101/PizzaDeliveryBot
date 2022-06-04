@@ -290,7 +290,7 @@ async def Greenscreen(ctx, arg):
     cv2.destroyAllWindows()
     out = None
 
-    await progressMessage.edit(content = "video downloaded\nediting progress:adding audio")
+    await progressMessage.edit(content = "video downloaded\nediting progress:`adding audio`")
     videoMPE = mpe.VideoFileClip(os.path.join(scriptPath, "videoOut.mp4"))
     final_audio = videoMPE.audio
 
