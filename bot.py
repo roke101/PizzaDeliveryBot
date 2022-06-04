@@ -2,6 +2,7 @@
 import os
 import time
 import discord
+import time
 
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -11,6 +12,7 @@ from pytube import YouTube
 import cv2
 import numpy as np
 import moviepy.editor as mpe
+
 
 
 load_dotenv()
@@ -225,7 +227,7 @@ async def Greenscreen(ctx, arg):
             await ctx.send(content="The video linked is over 8MB, please use another video.")
             return
     
-    progressMessage = await ctx.send(content="video downloaded\nediting progress:[          ]")
+    progressMessage = await ctx.send(content="video downloaded\nediting progress:`[          ]`")
     
     video = cv2.VideoCapture(os.path.join(scriptPath, "videoOut.mp4"))
     image = cv2.imread(os.path.join(scriptPath, lastDiscordImage))
@@ -235,6 +237,7 @@ async def Greenscreen(ctx, arg):
     out = cv2.VideoWriter(os.path.join(scriptPath, 'test_vid.avi'),fourcc, video.get(cv2.CAP_PROP_FPS), (640, 480));
 
     lastNumber = -1
+    lastEditTime = 0
     for i in range(int(video.get(cv2.CAP_PROP_FRAME_COUNT))):
 
         ret, frame = video.read()
@@ -275,8 +278,10 @@ async def Greenscreen(ctx, arg):
                 else:
                     progressBar += " "
             progressBar += "]"
-
-            await progressMessage.edit(content = "video downloaded\nediting progress:" + progressBar)
+            
+            if time.perf_counter() - lastEditTime > 1:
+                await progressMessage.edit(content = "video downloaded\nediting progress:`" + progressBar+"`")
+                lastEditTime = time.perf_counter()
 
             lastNumber = percentDone // 10
 
