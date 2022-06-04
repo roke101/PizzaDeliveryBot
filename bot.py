@@ -12,6 +12,7 @@ import cv2
 import numpy as np
 import moviepy.editor as mpe
 
+
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
@@ -217,12 +218,14 @@ async def Greenscreen(ctx, arg):
     if filter.filesize < 8000000:
         filter.download(scriptPath, filename="videoOut.mp4")
     else:
-        filter = yt.streams.filter(file_extension="mp4").get_by_resolution('360p')
+        filter = yt.streams.filter(file_extension="mp4").get_by_resolution("360p")
         if filter.filesize < 8000000:
             filter.download(scriptPath, filename="videoOut.mp4")
         else:
-            await ctx.send(content='The video linked is over 8MB, please use another video.')
+            await ctx.send(content="The video linked is over 8MB, please use another video.")
             return
+    
+    progressMessage = await ctx.send(content="video downloaded\nediting progress:[          ]")
     
     video = cv2.VideoCapture(os.path.join(scriptPath, "videoOut.mp4"))
     image = cv2.imread(os.path.join(scriptPath, lastDiscordImage))
@@ -231,15 +234,11 @@ async def Greenscreen(ctx, arg):
     fourcc = cv2.VideoWriter_fourcc(*'XVID');
     out = cv2.VideoWriter(os.path.join(scriptPath, 'test_vid.avi'),fourcc, video.get(cv2.CAP_PROP_FPS), (640, 480));
 
-    done = False;
-    while not done:
+    lastNumber = -1
+    for i in range(int(video.get(cv2.CAP_PROP_FRAME_COUNT))):
 
         ret, frame = video.read()
-        if not ret:
-            done = True;
-            continue;
         
-
         frame = cv2.resize(frame, (640, 480))
         image = cv2.resize(image, (640, 480))
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -266,6 +265,20 @@ async def Greenscreen(ctx, arg):
         out.write(f)
         #if cv2.waitKey(25) == 27:
         #    break
+        
+        percentDone = int(( (i + 1)  / video.get(cv2.CAP_PROP_FRAME_COUNT)) * 100)
+        if percentDone % 10 == 0 and lastNumber != percentDone // 10:
+            progressBar = "["
+            for i in range(10):
+                if i + 1 <= percentDone / 10:
+                    progressBar += "-"
+                else:
+                    progressBar += " "
+            progressBar += "]"
+
+            await progressMessage.edit(content = "video downloaded\nediting progress:" + progressBar)
+
+            lastNumber = percentDone // 10
 
     out.release()
     video.release()
@@ -281,6 +294,7 @@ async def Greenscreen(ctx, arg):
     my_clip.audio = final_audio
     my_clip.write_videofile(os.path.join(scriptPath, "meme.mp4"))
     
+    await progressMessage.delete()
     await ctx.send(file=discord.File(os.path.join(scriptPath, "meme.mp4")))
     
     videoMPE.close()
