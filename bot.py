@@ -217,14 +217,14 @@ async def Greenscreen(ctx, arg):
     yt = YouTube(arg)
 
     filter = yt.streams.filter(file_extension="mp4").get_by_resolution("720p")
-    if filter.filesize < 8000000:
+    if filter != None and filter.filesize < 8000000:
         filter.download(scriptPath, filename="videoOut.mp4")
     else:
         filter = yt.streams.filter(file_extension="mp4").get_by_resolution("360p")
-        if filter.filesize < 8000000:
+        if filter != None and filter.filesize < 8000000:
             filter.download(scriptPath, filename="videoOut.mp4")
         else:
-            await ctx.send(content="The video linked is over 8MB, please use another video.")
+            await ctx.send(content="The video linked is over 8MB or doesnt have the supported resolutions, please use another video.")
             return
     
     progressMessage = await ctx.send(content="video downloaded\nediting progress:`[          ]`")
