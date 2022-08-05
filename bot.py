@@ -65,9 +65,11 @@ async def City_Seventeen(ctx):
     
     await ctx.send(file=discord.File(os.path.join(scriptPath, 'city17.png')), content='Welcome! Welcome to City 17!') 
     
-    os.remove(os.path.join(scriptPath, lastDiscordImage)) 
+    os.remove(os.path.join(scriptPath, 'LastPostedImage.png'))
     
     Save_Generated_Picture(ctx, city17Base)
+    
+    os.remove(os.path.join(scriptPath, 'city17.png'))
     
 @bot.command(name='grind')
 @commands.cooldown(1, 1, type=commands.BucketType.user)
@@ -103,9 +105,11 @@ async def Grind(ctx):
     
     await ctx.send(file=discord.File(os.path.join(scriptPath, 'grind.png'))) 
     
-    os.remove(os.path.join(scriptPath, lastDiscordImage))
+    os.remove(os.path.join(scriptPath, 'LastPostedImage.png'))
     
     Save_Generated_Picture(ctx, uploadedImage)
+    
+    os.remove(os.path.join(scriptPath, 'grind.png'))
     
 @bot.command(name='walmart')
 @commands.cooldown(1, 1, type=commands.BucketType.user)
@@ -126,9 +130,11 @@ async def Walmart(ctx):
     
     await ctx.send(file=discord.File(os.path.join(scriptPath, 'walmart.png'))) 
     
-    os.remove(os.path.join(scriptPath, lastDiscordImage))
+    os.remove(os.path.join(scriptPath, 'LastPostedImage.png'))
     
     Save_Generated_Picture(ctx, walmartBase)
+    
+    os.remove(os.path.join(scriptPath, 'walmart.png'))
     
 @bot.command(name='bobross')
 @commands.cooldown(1, 1, type=commands.BucketType.user)
@@ -152,9 +158,11 @@ async def Bobross(ctx):
     
     await ctx.send(file=discord.File(os.path.join(scriptPath, 'bobross.png'))) 
     
-    os.remove(os.path.join(scriptPath, lastDiscordImage))
+    os.remove(os.path.join(scriptPath, 'LastPostedImage.png'))
     
     Save_Generated_Picture(ctx, bobRossBase)
+    
+    os.remove(os.path.join(scriptPath, 'bobross.png'))
     
 @bot.command(name='dominos')
 @commands.cooldown(1, 1, type=commands.BucketType.user)
@@ -177,9 +185,11 @@ async def Dominos(ctx):
     
     await ctx.send(file=discord.File(os.path.join(scriptPath, 'dominos.png'))) 
     
-    os.remove(os.path.join(scriptPath, lastDiscordImage))
+    os.remove(os.path.join(scriptPath, 'LastPostedImage.png'))
     
     Save_Generated_Picture(ctx, dominosBase)
+    
+    os.remove(os.path.join(scriptPath, 'dominos.png'))
     
 @bot.command(name='trump')
 @commands.cooldown(1, 1, type=commands.BucketType.user)
@@ -203,9 +213,11 @@ async def Trump(ctx):
     
     await ctx.send(file=discord.File(os.path.join(scriptPath, 'trump.png'))) 
     
-    os.remove(os.path.join(scriptPath, lastDiscordImage))
+    os.remove(os.path.join(scriptPath, 'LastPostedImage.png'))
     
     Save_Generated_Picture(ctx, trumpBase)
+    
+    os.remove(os.path.join(scriptPath, 'trump.png'))
     
     
 @bot.command(name='greenscreen')
@@ -319,8 +331,8 @@ async def Get_Last_Picture(ctx):
             if 'image' in lastDiscordMedia.content_type:
                 break
                 
-    print(await lastDiscordMedia.save( os.path.join(scriptPath, lastDiscordMedia.filename)))
-    return lastDiscordMedia.filename
+    print(await lastDiscordMedia.save( os.path.join(scriptPath, 'LastPostedImage.png')))
+    return 'LastPostedImage.png'
 
 # Helper function that saves the last Generated image permanently
 # to the server if the if condition is true  
