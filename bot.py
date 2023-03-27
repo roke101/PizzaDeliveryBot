@@ -18,6 +18,7 @@ import moviepy.editor as mpe
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
+client = discord.Client(intents=discord.Intents.default())
 bot = commands.Bot(command_prefix='<', activity=discord.Game(name="Pizza Ya San"))
 
 scriptPath = os.path.dirname(os.path.realpath(__file__))
