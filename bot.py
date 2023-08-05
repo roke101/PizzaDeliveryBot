@@ -1,8 +1,10 @@
 # bot.py
 import os
+from os.path import exists
 import time
 import discord
 import time
+import requests
 
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -324,13 +326,29 @@ async def Greenscreen(ctx, arg):
 # Helper function that saves the last image posted in channel
 # and returns that images file name    
 async def Get_Last_Picture(ctx):
+    imageSuffixTuple = ".png", '.jpg', 'jpeg', '.svg', '.gif'
+       
     async for message in ctx.channel.history(limit=None):
+        #get a picture via attachment
         if message.attachments:
             lastDiscordMedia = message.attachments[0]
             if 'image' in lastDiscordMedia.content_type:
+                print(await lastDiscordMedia.save( os.path.join(scriptPath, 'LastPostedImage.png')))
                 break
                 
-    print(await lastDiscordMedia.save( os.path.join(scriptPath, 'LastPostedImage.png')))
+        #get a picture via url       
+        elif message.content.startswith('https://') and message.content.endswith(imageSuffixTuple):
+            try:
+                lastDiscordMedia = requests.get(message.content, headers = {'User-agent': 'tony bot 0.1'})
+                open(os.path.join(scriptPath, 'LastPostedImage.png'), 'wb').write(lastDiscordMedia.content)
+                break
+            except:
+                print("bad url, skipping to next message")
+    
+    if not exists(os.path.join(scriptPath, 'LastPostedImage.png')):
+        await ctx.send(content="Error getting previous posted image")
+        return
+    
     return 'LastPostedImage.png'
 
 # Helper function that saves the last Generated image permanently
