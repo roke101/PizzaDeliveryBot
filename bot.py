@@ -44,23 +44,21 @@ async def City_Seventeen(ctx):
     lastDiscordImage = await Get_Last_Picture(ctx)
     uploadedImage = Image.open(os.path.join(scriptPath, lastDiscordImage)).convert("RGBA")
     
-    city17Base = Image.open(os.path.join(templatePath, 'city17Template.png'))
-    imageMask = Image.open(os.path.join(templatePath, 'City17Mask.png')).convert("L").resize((154, 292))
-    wiresOverlap = Image.open(os.path.join(templatePath, 'wiresTemplate.png')).convert("RGBA")
+    imageMask = Image.open(os.path.join(templatePath, 'c17_mask.png')).convert("RGBA")
+    city17Base = Image.new(mode="RGBA", size=imageMask.size, color=(0,0,0,0))
 
     #resize image
-    uploadedImage = uploadedImage.resize((154, 292))
-
-    #apply mask to give top of screen curviture
-    uploadedImage.putalpha(imageMask)
+    uploadedImage = uploadedImage.resize((175, 300), resample=Image.Resampling.BICUBIC)
 
     #tilt image
     uploadedImage = uploadedImage.rotate(-10, Image.Resampling.BICUBIC ,expand=True)
 
+    uploadedImage = uploadedImage.resize((225, 326), resample=Image.Resampling.BICUBIC)
+    
     #overlay onto pre-existing city17
-    city17Base.paste(uploadedImage, (134, 363), uploadedImage)
+    city17Base.paste(uploadedImage, (124, 360), uploadedImage)
 
-    city17Base.paste(wiresOverlap, (0, 0), wiresOverlap)
+    city17Base.paste(imageMask, (0, 0), imageMask)
 
     city17Base.save(os.path.join(scriptPath, 'city17.png'))
     
