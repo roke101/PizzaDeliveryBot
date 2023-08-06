@@ -11,7 +11,7 @@ import io
 
 from discord.ext import commands
 from dotenv import load_dotenv
-from PIL import Image
+from PIL import Image, ImageEnhance
 
 from pytube import YouTube
 import cv2
@@ -222,6 +222,33 @@ async def Trump(ctx):
     Save_Generated_Picture(ctx, trumpBase)
     
     os.remove(os.path.join(scriptPath, 'trump.png'))
+
+
+@bot.command(name='deepfry')
+@commands.cooldown(1, 1, type=commands.BucketType.user)
+async def Deepfry(ctx):
+    
+    lastDiscordImage = await Get_Last_Picture(ctx)
+    uploadedImage = Image.open(os.path.join(scriptPath, lastDiscordImage)).convert("RGBA")
+    
+    sharpness = ImageEnhance.Sharpness(uploadedImage)
+    uploadedImage = sharpness.enhance(10.0)
+    color = ImageEnhance.Color(uploadedImage)
+    uploadedImage = color.enhance(6.5)
+    contrast = ImageEnhance.Contrast(uploadedImage)
+    uploadedImage = contrast.enhance(4.75)
+    brightness = ImageEnhance.Brightness(uploadedImage)
+    uploadedImage = brightness.enhance(1.1)
+
+    uploadedImage.save(os.path.join(scriptPath, 'deepfry.png'))
+    
+    await ctx.send(file=discord.File(os.path.join(scriptPath, 'deepfry.png'))) 
+    
+    os.remove(os.path.join(scriptPath, 'LastPostedImage.png'))
+    
+    Save_Generated_Picture(ctx, uploadedImage)
+    
+    os.remove(os.path.join(scriptPath, 'deepfry.png'))
 
 
 @bot.command(name='glitch')
