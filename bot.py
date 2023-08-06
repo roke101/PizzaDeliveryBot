@@ -12,6 +12,7 @@ import io
 from discord.ext import commands
 from dotenv import load_dotenv
 from PIL import Image, ImageEnhance
+import wand, wand.color, wand.drawing
 
 from pytube import YouTube
 import cv2
@@ -280,6 +281,42 @@ async def Glitch(ctx):
     #Save_Generated_Picture(ctx, glitchBase)
     
     os.remove(os.path.join(scriptPath, 'glitch.png'))
+    
+    
+@bot.command(name='magik')
+@commands.cooldown(1, 1, type=commands.BucketType.user)
+async def Magik(ctx):
+    
+    lastDiscordImage = await Get_Last_Picture(ctx)
+    # save last image as a jpg
+    uploadedImage = Image.open(os.path.join(scriptPath, lastDiscordImage)).convert("RGB")
+    uploadedImage.save(os.path.join(scriptPath, 'LastPostedImage.jpg'))
+    lastDiscordImageHandle = open(os.path.join(scriptPath, 'LastPostedImage.jpg'), 'rb')
+    
+    exif = {}
+    count = 0
+    limit=6
+    scale=5
+
+    i = wand.image.Image(file=lastDiscordImageHandle)
+    i.format = 'jpg'
+    exif.update({count:(k[5:], v) for k, v in i.metadata.items() if k.startswith('exif:')})
+    count += 1
+    i.transform(resize='800x800>')
+    i.liquid_rescale(width=int(i.width * 0.5), height=int(i.height * 0.5), delta_x=int(0.5 * scale) if scale else 1, rigidity=0)
+    i.liquid_rescale(width=int(i.width * 1.5), height=int(i.height * 1.5), delta_x=scale if scale else 2, rigidity=0)
+
+
+    i.save(filename=os.path.join(scriptPath, 'magik.png'))
+    await ctx.send(file=discord.File(os.path.join(scriptPath, 'magik.png'))) 
+    
+    lastDiscordImageHandle.close()
+    os.remove(os.path.join(scriptPath, 'LastPostedImage.png'))
+    os.remove(os.path.join(scriptPath, 'LastPostedImage.jpg'))
+    
+    #Save_Generated_Picture(ctx, uploadedImage)
+    
+    os.remove(os.path.join(scriptPath, 'magik.png'))
     
     
 @bot.command(name='greenscreen')
