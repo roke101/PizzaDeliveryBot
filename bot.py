@@ -5,6 +5,9 @@ import time
 import discord
 import time
 import requests
+import random
+import jpglitch
+import io
 
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -219,6 +222,37 @@ async def Trump(ctx):
     Save_Generated_Picture(ctx, trumpBase)
     
     os.remove(os.path.join(scriptPath, 'trump.png'))
+
+
+@bot.command(name='glitch')
+@commands.cooldown(1, 1, type=commands.BucketType.user)
+async def Glitch(ctx):
+
+    lastDiscordImage = await Get_Last_Picture(ctx)
+    # save last image as a jpg
+    uploadedImage = Image.open(os.path.join(scriptPath, lastDiscordImage)).convert("RGB")
+    uploadedImage.save(os.path.join(scriptPath, 'LastPostedImage.jpg'))
+
+    lastDiscordImageHandle = open(os.path.join(scriptPath, 'LastPostedImage.jpg'), 'rb')
+
+    iterations = random.randint(1, 30)
+    amount = random.randint(1, 20)
+    seed = random.randint(1, 20)
+
+    UploadImage = jpglitch.Jpeg(bytearray(lastDiscordImageHandle.read()), amount, seed, iterations)
+    UploadImage.save_image(os.path.join(scriptPath, 'glitch.png'))
+    
+    await ctx.send(file=discord.File(os.path.join(scriptPath, 'glitch.png')), content='Iterations: `{0}` | Amount: `{1}` | Seed: `{2}`'.format(iterations, amount, seed)) 
+    
+    lastDiscordImageHandle.close()
+    
+    os.remove(os.path.join(scriptPath, 'LastPostedImage.png'))
+    os.remove(os.path.join(scriptPath, 'LastPostedImage.jpg'))
+    
+    #glitchBase = Image.open(os.path.join(scriptPath, 'glitch.png'))
+    #Save_Generated_Picture(ctx, glitchBase)
+    
+    os.remove(os.path.join(scriptPath, 'glitch.png'))
     
     
 @bot.command(name='greenscreen')
