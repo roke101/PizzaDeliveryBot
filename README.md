@@ -7,7 +7,7 @@ dependencies
   &emsp;[python-dotenv](https://pypi.org/project/python-dotenv/)  
   &emsp;[pytube](https://pytube.io/en/latest/user/install.html)  
   &emsp;[opencv](https://pypi.org/project/opencv-python/)  
-  &emsp;[moviepy](https://zulko.github.io/moviepy/install.html)
+  &emsp;[moviepy](https://zulko.github.io/moviepy/install.html)  
   &emsp;[click](https://click.palletsprojects.com/en/8.1.x/)  
 
 Add discord bot token to envExample.txt and rename the file to .env before use.
