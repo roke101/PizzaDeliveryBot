@@ -141,6 +141,31 @@ async def Walmart(ctx):
     
     os.remove(os.path.join(scriptPath, 'walmart.png'))
     
+@bot.command(name='abbadon')
+@commands.cooldown(1, 1, type=commands.BucketType.user)
+async def Abbadon(ctx):
+    
+    lastDiscordImage = await Get_Last_Picture(ctx)
+    uploadedImage = Image.open(os.path.join(scriptPath, lastDiscordImage)).convert("RGBA")
+    
+    abbadonBase = Image.open(os.path.join(templatePath, 'abbadonTemplate.png'))
+
+    #resize image
+    uploadedImage = uploadedImage.resize((476, 224))
+
+    #overlay onto walmart template
+    abbadonBase.paste(uploadedImage, (82, 80), uploadedImage)
+
+    abbadonBase.save(os.path.join(scriptPath, 'abbadon.png'))
+    
+    await ctx.send(file=discord.File(os.path.join(scriptPath, 'abbadon.png'))) 
+    
+    os.remove(os.path.join(scriptPath, 'LastPostedImage.png'))
+    
+    Save_Generated_Picture(ctx, abbadonBase)
+    
+    os.remove(os.path.join(scriptPath, 'abbadon.png'))
+    
 @bot.command(name='bobross')
 @commands.cooldown(1, 1, type=commands.BucketType.user)
 async def Bobross(ctx):
