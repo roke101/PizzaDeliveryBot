@@ -151,10 +151,10 @@ async def Abbadon(ctx):
     abbadonBase = Image.open(os.path.join(templatePath, 'abbadonTemplate.png'))
 
     #resize image
-    uploadedImage = uploadedImage.resize((476, 224))
+    uploadedImage = uploadedImage.resize((224, 224))
 
     #overlay onto walmart template
-    abbadonBase.paste(uploadedImage, (82, 80), uploadedImage)
+    abbadonBase.paste(uploadedImage, (210, 80), uploadedImage)
 
     abbadonBase.save(os.path.join(scriptPath, 'abbadon.png'))
     
