@@ -449,18 +449,22 @@ async def Greenscreen(ctx, arg):
 # Helper function that saves the last image posted in channel
 # and returns that images file name    
 async def Get_Last_Picture(ctx):
-    imageSuffixTuple = ".png", '.jpg', 'jpeg', '.svg', '.gif'
+    imageSuffixTuple = '.png', '.jpg', 'jpeg', '.svg', '.gif'
+    imageSuffixFlag = 0
        
     async for message in ctx.channel.history(limit=None):
         #get a picture via attachment
+        for suffixString in imageSuffixTuple:
+            if message.content.find(suffixString) != -1:
+                imageSuffixFlag = 1
+        
         if message.attachments:
             lastDiscordMedia = message.attachments[0]
             if 'image' in lastDiscordMedia.content_type:
                 print(await lastDiscordMedia.save( os.path.join(scriptPath, 'LastPostedImage.png')))
                 break
-                
         #get a picture via url       
-        elif message.content.startswith('https://') and message.content.endswith(imageSuffixTuple):
+        elif message.content.startswith('https://') and imageSuffixFlag == 1:
             try:
                 lastDiscordMedia = requests.get(message.content, headers = {'User-agent': 'tony bot 0.1'})
                 open(os.path.join(scriptPath, 'LastPostedImage.png'), 'wb').write(lastDiscordMedia.content)
